@@ -34,9 +34,9 @@ A responsive web application where users can list their skills, request others i
 | Layer       | Tech Used                     |
 |-------------|-------------------------------|
 | Frontend    | React, Tailwind CSS, Vite     |
-| Backend     | Node.js + Express *or* Supabase |
-| Database    | MongoDB (MERN) *or* PostgreSQL (Supabase) |
-| Auth        | JWT (custom) or Supabase Auth |
-| Storage     | Cloudinary or Supabase Storage |
-| Admin Panel | Custom React or Supabase Dash |
+| Backend     | Node.js + Express  |
+| Database    | MongoDB (MERN)  |
+| Auth        | JWT (custom)  |
+| Storage     | Cloudinary  |
+| Admin Panel | Custom React  |
 
