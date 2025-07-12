@@ -65,6 +65,9 @@ const SwapRequestCard = ({ request, onUpdateRequest, onDeleteRequest }: { reques
   const { toast } = useToast();
   const isIncoming = request.toUser.id === currentUser.id;
   const otherUser = isIncoming ? request.fromUser : request.toUser;
+  const fromUser = isIncoming ? otherUser : currentUser;
+  const toUser = isIncoming ? currentUser : otherUser;
+
 
   const handleAccept = () => {
     onUpdateRequest(request.id, 'completed');
@@ -94,18 +97,18 @@ const SwapRequestCard = ({ request, onUpdateRequest, onDeleteRequest }: { reques
         <CardTitle className="flex items-center gap-4 text-lg">
           <div className="flex items-center gap-3">
             <Avatar>
-              <AvatarImage src={request.fromUser.avatar} />
-              <AvatarFallback>{request.fromUser.initials}</AvatarFallback>
+              <AvatarImage src={fromUser.avatar} />
+              <AvatarFallback>{fromUser.initials}</AvatarFallback>
             </Avatar>
-            <span>{request.fromUser.name}</span>
+            <span>{fromUser.name}</span>
           </div>
           <ArrowRight className="h-5 w-5 text-muted-foreground" />
           <div className="flex items-center gap-3">
             <Avatar>
-              <AvatarImage src={request.toUser.avatar} />
-              <AvatarFallback>{request.toUser.initials}</AvatarFallback>
+              <AvatarImage src={toUser.avatar} />
+              <AvatarFallback>{toUser.initials}</AvatarFallback>
             </Avatar>
-            <span>{request.toUser.name}</span>
+            <span>{toUser.name}</span>
           </div>
         </CardTitle>
         <CardDescription>
