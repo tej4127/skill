@@ -40,6 +40,3 @@ A responsive web application where users can list their skills, request others i
 | Storage     | Cloudinary or Supabase Storage |
 | Admin Panel | Custom React or Supabase Dash |
 
----
-
-## 📁 Folder Structure (MERN Example)
