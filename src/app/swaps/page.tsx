@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useState } from 'react';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,10 +9,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Check, Star, Trash2, X } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-const currentUser = { id: 1, name: 'You' };
+const currentUser = { id: 1, name: 'You', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d', initials: 'AJ' };
 
-const swapRequests = [
+const initialSwapRequests = [
   {
     id: 1,
     fromUser: { id: 2, name: 'Bob Williams', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704e', initials: 'BW' },
@@ -47,9 +50,33 @@ const swapRequests = [
   },
 ];
 
-const SwapRequestCard = ({ request }: { request: typeof swapRequests[0] }) => {
+type SwapRequest = typeof initialSwapRequests[0];
+
+const SwapRequestCard = ({ request, onUpdateRequest, onDeleteRequest }: { request: SwapRequest; onUpdateRequest: (id: number, newStatus: 'completed' | 'declined') => void; onDeleteRequest: (id: number) => void; }) => {
+  const { toast } = useToast();
   const isIncoming = request.toUser.id === currentUser.id;
   const otherUser = isIncoming ? request.fromUser : request.toUser;
+
+  const handleAccept = () => {
+    onUpdateRequest(request.id, 'completed');
+    toast({ title: "Swap Accepted!", description: `You can now coordinate with ${otherUser.name}.` });
+  };
+  
+  const handleDecline = () => {
+    onUpdateRequest(request.id, 'declined');
+    toast({ title: "Swap Declined", variant: "destructive" });
+  };
+
+  const handleDelete = () => {
+    onDeleteRequest(request.id);
+    toast({ title: "Request Deleted", description: "Your swap request has been deleted." });
+  };
+
+  const handleLeaveFeedback = () => {
+    toast({ title: "Feature not implemented", description: "Leaving feedback is not yet available.", variant: "destructive" });
+  };
+
+  if (request.status === 'declined') return null;
 
   return (
     <Card className="transition-shadow hover:shadow-md">
@@ -79,15 +106,15 @@ const SwapRequestCard = ({ request }: { request: typeof swapRequests[0] }) => {
         {request.status === 'pending' && (
           isIncoming ? (
             <>
-              <Button variant="outline" size="sm"><X className="mr-2 h-4 w-4" /> Decline</Button>
-              <Button size="sm"><Check className="mr-2 h-4 w-4" /> Accept</Button>
+              <Button variant="outline" size="sm" onClick={handleDecline}><X className="mr-2 h-4 w-4" /> Decline</Button>
+              <Button size="sm" onClick={handleAccept}><Check className="mr-2 h-4 w-4" /> Accept</Button>
             </>
           ) : (
-            <Button variant="destructive" size="sm"><Trash2 className="mr-2 h-4 w-4" /> Delete Request</Button>
+            <Button variant="destructive" size="sm" onClick={handleDelete}><Trash2 className="mr-2 h-4 w-4" /> Delete Request</Button>
           )
         )}
         {request.status === 'completed' && !request.feedbackGiven && (
-          <Button size="sm" variant="outline"><Star className="mr-2 h-4 w-4" /> Leave Feedback</Button>
+          <Button size="sm" variant="outline" onClick={handleLeaveFeedback}><Star className="mr-2 h-4 w-4" /> Leave Feedback</Button>
         )}
         {request.status === 'completed' && request.feedbackGiven && (
           <div className="flex items-center text-sm text-green-600">
@@ -100,6 +127,16 @@ const SwapRequestCard = ({ request }: { request: typeof swapRequests[0] }) => {
 };
 
 export default function SwapsPage() {
+  const [swapRequests, setSwapRequests] = useState<SwapRequest[]>(initialSwapRequests);
+
+  const handleUpdateRequest = (id: number, newStatus: 'completed' | 'declined') => {
+    setSwapRequests(prev => prev.map(req => req.id === id ? { ...req, status: newStatus } : req));
+  };
+  
+  const handleDeleteRequest = (id: number) => {
+    setSwapRequests(prev => prev.filter(req => req.id !== id));
+  };
+
   const pendingRequests = swapRequests.filter(req => req.status === 'pending');
   const completedSwaps = swapRequests.filter(req => req.status === 'completed');
 
@@ -114,14 +151,14 @@ export default function SwapsPage() {
           </TabsList>
           <TabsContent value="pending" className="space-y-4">
             {pendingRequests.length > 0 ? (
-              pendingRequests.map(req => <SwapRequestCard key={req.id} request={req} />)
+              pendingRequests.map(req => <SwapRequestCard key={req.id} request={req} onUpdateRequest={handleUpdateRequest} onDeleteRequest={handleDeleteRequest} />)
             ) : (
               <p className="text-muted-foreground pt-4">You have no pending swap requests.</p>
             )}
           </TabsContent>
           <TabsContent value="completed" className="space-y-4">
             {completedSwaps.length > 0 ? (
-              completedSwaps.map(req => <SwapRequestCard key={req.id} request={req} />)
+              completedSwaps.map(req => <SwapRequestCard key={req.id} request={req} onUpdateRequest={handleUpdateRequest} onDeleteRequest={handleDeleteRequest} />)
             ) : (
               <p className="text-muted-foreground pt-4">You have no completed swaps yet.</p>
             )}

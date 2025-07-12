@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -13,11 +14,8 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarInset,
-  useSidebar,
 } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
 import { LayoutGrid, ArrowRightLeft, User, Shield, Briefcase } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/', label: 'Browse', icon: LayoutGrid },
@@ -44,10 +42,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label}>
                   <Link href={item.href}>
-                    <>
-                      <item.icon />
-                      <span>{item.label}</span>
-                    </>
+                    <item.icon />
+                    <span>{item.label}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
