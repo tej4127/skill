@@ -11,12 +11,21 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Check, Star, Trash2, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+// Defined a clear current user object
 const currentUser = { id: 1, name: 'You', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d', initials: 'AJ' };
+
+// Other users in the system
+const otherUsers = [
+  { id: 2, name: 'Bob Williams', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704e', initials: 'BW' },
+  { id: 3, name: 'Charlie Brown', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704f', initials: 'CB' },
+  { id: 4, name: 'Diana Miller', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704g', initials: 'DM' },
+  { id: 5, name: 'Ethan Davis', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704h', initials: 'ED' },
+];
 
 const initialSwapRequests = [
   {
     id: 1,
-    fromUser: { id: 2, name: 'Bob Williams', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704e', initials: 'BW' },
+    fromUser: otherUsers[0], // Bob
     toUser: currentUser,
     fromSkill: 'Excel',
     toSkill: 'Photoshop',
@@ -25,14 +34,14 @@ const initialSwapRequests = [
   {
     id: 2,
     fromUser: currentUser,
-    toUser: { id: 3, name: 'Charlie Brown', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704f', initials: 'CB' },
+    toUser: otherUsers[1], // Charlie
     fromSkill: 'Creative Writing',
     toSkill: 'Yoga Instruction',
     status: 'pending',
   },
   {
     id: 3,
-    fromUser: { id: 4, name: 'Diana Miller', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704g', initials: 'DM' },
+    fromUser: otherUsers[2], // Diana
     toUser: currentUser,
     fromSkill: 'Python',
     toSkill: 'Logo Design',
@@ -42,7 +51,7 @@ const initialSwapRequests = [
   {
     id: 4,
     fromUser: currentUser,
-    toUser: { id: 5, name: 'Ethan Davis', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704h', initials: 'ED' },
+    toUser: otherUsers[3], // Ethan
     fromSkill: 'SEO Basics',
     toSkill: 'Guitar Lessons',
     status: 'completed',
@@ -73,6 +82,7 @@ const SwapRequestCard = ({ request, onUpdateRequest, onDeleteRequest }: { reques
   };
 
   const handleLeaveFeedback = () => {
+    // In a real app, this would update the feedbackGiven status
     toast({ title: "Feature not implemented", description: "Leaving feedback is not yet available.", variant: "destructive" });
   };
 
